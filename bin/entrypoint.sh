@@ -26,6 +26,11 @@ else
    echo "${USER}:${PASSWORD}" | chpasswd
 fi
 
+for group in `echo ${GROUPS} | sed "s/,/ /g"`; do
+  echo "=> Adding user ${USER} to group ${group} ..."
+  usermod -a -G www-data ${USER}
+done
+
 if [[ $# -lt 1 ]]; then
    exec /usr/sbin/sshd -D
 fi

@@ -7,7 +7,13 @@ fi
 
 if ! getent passwd ${USER} >/dev/null; then
   echo "=> Creating user ${USER} ..."
-  useradd -d /home/${USER} -m -G sudo -s /bin/bash ${USER}
+  if echo ${USER_ID} | grep . >/dev/null; then
+    USERADD_EXTRA_ARGS+=" -u ${USER_ID} -o"
+  fi
+  if echo ${GROUP_ID} | grep . >/dev/null; then
+    USERADD_EXTRA_ARGS+=" -g ${GROUP_ID}"
+  fi
+  useradd -d /home/${USER} -m -G sudo -s /bin/bash ${USERADD_EXTRA_ARGS} ${USER}
 fi
 
 if [ "${PASSWORD}" == "**ChangeMe**" -o -z "${PASSWORD}" ]; then
